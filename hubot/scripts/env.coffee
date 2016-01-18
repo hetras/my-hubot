@@ -28,10 +28,11 @@ module.exports = (robot) ->
         i.Started = dateformat(started, "yyyy-mm-dd HH:MM");
         i.Costs = (now - started) / 1000 / 3600 * COSTS_PER_HOUR
       widthName = maxWidth(instances, "Name")
-      widthType = maxWidth(instances, "Instance")
-      title = printf("%-*s %-*s %-16s %4s\n", "Name", widthName, "Type", widthType, "Created", "Costs")
-      sep = "-".repeat(widthName + widthType + 16 + 4 + 4) + "\n"
-      report = (printf("%-*s %-*s %16s %4d$", i.Name, widthName, i.Instance, widthType, i.Started, i.Costs) for i in instances)
+      widthIP = maxWidth(instances, "InternalIP")
+      widthState = maxWidth(instances, "State")
+      title = printf("%-*s %-*s %-*s %-16s %4s\n", "Name", widthName, "IP", widthIP, "State", widthState, "Started", "Costs")
+      sep = "-".repeat(widthName + widthIP + widthState + 16 + 4 + 4) + "\n"
+      report = (printf("%-*s %-*s %-*s %16s %4d$", i.Name, widthName, i.InternalIP, widthIP, i.State, widthState, i.Started, i.Costs) for i in instances)
       r.send "```\n" + title + sep + report.join("\n") + "```\n"
 
   robot.respond /env a(rtifacts)?$/i, (r) ->
