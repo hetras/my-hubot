@@ -1,6 +1,8 @@
 #! /bin/bash
-token=`grep SLACK /etc/environment`
+token=`grep HUBOT_SLACK_TOKEN /etc/environment`
+aws_creds=`grep ANSIBLE_AWS_KEY_FILE /etc/environment`
 export ${token}
+export ${aws_creds}
 
 # run hubot controlled by supervisord
 cd hubot
