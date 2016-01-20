@@ -50,18 +50,18 @@ module.exports = (robot) ->
     download = (path) -> (callback) -> request "http://localhost:5000/#{path}", (err, res, body) ->
       callback(null, JSON.parse(body))
 
-    validate = (valid, val, name) ->
-      matching = valid.filter (x) -> x.toUpperCase().startsWith(val.toUpperCase())
+    validate = (valid, val, name, exact) ->
+      matching = valid.filter (x) -> (exact and x.toUpperCase() == val.toUpperCase()) or (not exact and x.toUpperCase().startsWith(val.toUpperCase()))
       if (matching.length == 1)
         return matching[0]
       else if (matching.length < 1)
         r.reply "Please specify a valid #{name} from :\n" + valid.join("\n")
-      else if (matching_artifacts.length > 1)
+      else if (matching.length > 1)
         r.reply "Which #{name} do you mean?\n" + matching.join("\n")
       return null
 
     update = (env, art) ->
-      tag = "tag_Name_" + env.replace /-/, "_" 
+      tag = "tag_Name_" + env.replace /-/g, "_"
       cmd = "ansible-playbook UpdateEnvironment.yaml -l #{tag} -e \"env_name=#{env} version=#{art}\""
       r.send cmd
       exec cmd, {cwd: "/repos/tools/Ansible/Playbooks"}, (error, stdout, stderr) ->
@@ -71,6 +71,6 @@ module.exports = (robot) ->
 
     async.parallel [download("environments"), download("artifacts")], (error, result) ->
       [environments, artifacts] = result
-      env = validate(environments, r.match[2], "environment")
-      art = validate(artifacts, r.match[3], "artifact") if env
+      env = validate(environments, r.match[2], "environment", true)
+      art = validate(artifacts, r.match[3], "artifact", false) if env
       update(env, art) if env && art
