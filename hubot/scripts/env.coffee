@@ -74,3 +74,16 @@ module.exports = (robot) ->
       env = validate(environments, r.match[2], "environment", true)
       art = validate(artifacts, r.match[3], "artifact", false) if env
       update(env, art) if env && art
+
+  robot.respond /env r(estore)? ([^ ]+)( ([^ ]+))?$/i, (r) ->
+    env = r.match[2]
+    keep_db = false
+    if r.match[4]?
+      if r.match[4] in ['true', 'false']
+        keep_db = r.match[4]
+      else
+        r.reply "Please specify a valid option from: \ntrue\nfalse"
+        return null
+    tag = "tag_Name_" + env.replace /-/g, "_"
+    cmd = "ansible-playbook RestoreDB.yaml -l #{tag} -e \"env_name=#{env} keep_current_db=#{keep_db}\""
+    r.send cmd
