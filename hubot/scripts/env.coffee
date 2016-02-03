@@ -5,6 +5,7 @@
 #   hubot env - list existing environments on Certification
 #   hubot env artifacts - list existing artifacts that could be deployed to environments
 #   hubot env update <env> <branch> - update an environment with the latest artifacts from branch
+#   hubot env restore <env> - restore Backend DB using the latest Production DB backup - If you want to keek the current DB, use the "keep" option
 #
 
 request = require('request')
