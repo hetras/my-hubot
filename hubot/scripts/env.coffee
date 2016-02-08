@@ -85,7 +85,7 @@ module.exports = (robot) ->
     if r.match[3]?
         keep_db = true
     tag = "tag_Name_" + env.replace /-/g, "_"
-    cmd = "ansible-playbook RestoreDB.yaml -l #{tag} -e \"env_name=#{env} keep_current_db=#{keep_db}\""
+    cmd = "ansible-playbook RestoreDB.yaml -l #{tag} -e \"env_name=#{env} keep_current_db=#{keep_db} setup_night_audit=true\""
     r.send cmd
     exec cmd, {cwd: "/repos/tools/Ansible/Playbooks"}, (error, stdout, stderr) ->
       r.reply error if error?
