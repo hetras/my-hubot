@@ -5,6 +5,8 @@
 #   hubot wtf - relax, don't do  it
 #
 
+replies = [':japanese_ogre:', ':troll:', ':neckbeard:']
+
 module.exports = (robot) ->
   robot.respond /wtf$/i, (r) ->
-    r.send ":japanese_ogre:"
+    r.send r.random replies
