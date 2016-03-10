@@ -34,9 +34,9 @@ module.exports = (robot) ->
       widthState = maxWidth(instances, "State")
       widthArtifacts = maxWidth(instances, "Artifacts")
       widthTeam = maxWidth(instances, "Team")
-      title = printf("%-*s %-*s %-*s %-*s %-*s %-16s %4s\n", "Name", widthName, "IP", widthIP, "State", widthState, "Artifacts", widthArtifacts, "Team", widthTeam, "Started", "Costs")
-      sep = "-".repeat(widthName + widthIP + widthState + widthArtifacts + widthTeam + 16 + 4 + 4 + 2) + "\n"
-      report = (printf("%-*s %-*s %-*s %-*s %-*s %16s %4d$", i.Name, widthName, i.InternalIP, widthIP, i.State, widthState, i.Artifacts, widthArtifacts, i.Team, widthTeam, i.Started, i.Costs) for i in instances)
+      title = printf("%-*s %-*s %-*s %-*s %-*s %-16s\n", "Name", widthName, "IP", widthIP, "State", widthState, "Artifacts", widthArtifacts, "Team", widthTeam, "Started")
+      sep = "-".repeat(widthName + widthIP + widthState + widthArtifacts + widthTeam + 16 + 4 + 2) + "\n"
+      report = (printf("%-*s %-*s %-*s %-*s %-*s %16s", i.Name, widthName, i.InternalIP, widthIP, i.State, widthState, i.Artifacts, widthArtifacts, i.Team, widthTeam, i.Started) for i in instances)
       r.send "```\n" + title + sep + report.join("\n") + "```\n"
 
   robot.respond /env a(rtifacts)?$/i, (r) ->
