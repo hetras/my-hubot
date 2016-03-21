@@ -81,13 +81,12 @@ module.exports = (robot) ->
 
   robot.respond /env r(estore)? ([^ ]+)( keep)?$/i, (r) ->
     env = r.match[2]
-    keep_db = false
+    keep_db = "No"
     if r.match[3]?
-        keep_db = true
-    tag = "tag_Name_" + env.replace /-/g, "_"
-    cmd = "ansible-playbook RestoreDB.yaml -l #{tag} -e \"env_name=#{env} keep_current_db=#{keep_db} setup_night_audit=true\""
+        keep_db = "Yes"
+    cmd = "sh RestoreDatabaseAndUpdateEnvironment.sh #{env} #{keep_db}"
     r.send cmd
-    exec cmd, {cwd: "/repos/tools/Ansible/Playbooks"}, (error, stdout, stderr) ->
+    exec cmd, {cwd: "/repos/tools/Ansible"}, (error, stdout, stderr) ->
       r.reply error if error?
       r.reply stdout
       r.reply stderr
