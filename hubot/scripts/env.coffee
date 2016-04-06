@@ -70,8 +70,7 @@ module.exports = (robot) ->
       r.send cmd
       exec cmd, {cwd: "/repos/tools/Ansible/Playbooks"}, (error, stdout, stderr) ->
         r.reply error if error?
-        r.reply stdout
-        r.reply stderr
+        r.reply stdout if error?
 
     async.parallel [download("environments"), download("artifacts")], (error, result) ->
       [environments, artifacts] = result
