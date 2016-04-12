@@ -5,7 +5,7 @@
 #   hubot wtf - relax, don't do  it
 #
 
-replies = [':japanese_ogre:', ':troll:', ':neckbeard:']
+replies = [':japanese_ogre:', ':japanese_goblin:', ':bowtie:', ':rube:', ':glitch_crab:', ':troll:', ':neckbeard:', ':piggy:']
 
 module.exports = (robot) ->
   robot.respond /wtf$/i, (r) ->
