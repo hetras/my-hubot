@@ -103,14 +103,20 @@ module.exports = (robot) ->
         data = JSON.parse body
 
         if r.match[3]?
-          tenant = r.match[3]
-          if not data.hasOwnProperty(tenant)
+          toFind = r.match[3]
+          tenant = null
+          password = null
+          for t, p of data
+            if t.toLowerCase() == toFind.toLowerCase()
+              tenant = t
+              password = p
+          if not password
             r.send 'Information about tenant _' + tenant + '_ is not available.'
             return
           else
-            password = data[tenant]
             data = {}
             data[tenant] = password
+
         pwds = for tenant, pass of data
           "#{tenant} : #{pass}"
         r.send '```' + pwds.sort().join('\n') + '```'
