@@ -6,7 +6,8 @@
 #   hubot env artifacts - list existing artifacts that could be deployed to environments
 #   hubot env update <env> <branch> - update an environment with the latest artifacts from branch
 #   hubot env restore <env> - restore Backend DB using the latest production backup - use the "keep" option to keep the current DB
-#
+#   hubot env password <enviroment> prints the passwords for each tenant for the requested enviroment
+#   hubot env password <environment> <tenantcode> prints the password for the specific tenant for the requested enviroment
 
 request = require('request')
 printf = require('printf')
@@ -89,3 +90,27 @@ module.exports = (robot) ->
       r.reply error if error?
       r.reply stdout
       r.reply stderr
+
+  robot.respond /env password(s)? ([^ ]+)\s?([^ ]+)?$/i, (r) ->
+    env = r.match[2]
+    request 'http://localhost:5000/passwords/' + env, (error, response, body) ->
+      if error or response.statusCode == 404
+        r.send 'Information about _' + env + '_ is not available.'
+      else
+        body = body.replace(/(\\r\\n|\\n|\\r)/gm,"")
+                   .replace(/\\"/gm, '"')
+        body = body.substring(1, body.length - 1)
+        data = JSON.parse body
+
+        if r.match[3]?
+          tenant = r.match[3]
+          if not data.hasOwnProperty(tenant)
+            r.send 'Information about tenant _' + tenant + '_ is not available.'
+            return
+          else
+            password = data[tenant]
+            data = {}
+            data[tenant] = password
+        pwds = for tenant, pass of data
+          "#{tenant} : #{pass}"
+        r.send '```' + pwds.sort().join('\n') + '```'
