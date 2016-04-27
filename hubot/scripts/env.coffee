@@ -65,19 +65,19 @@ module.exports = (robot) ->
         r.reply "Which #{name} do you mean?\n" + matching.join("\n")
       return null
 
-    update = (env, art) ->
+    update = (env, art, cloudEnv) ->
       tag = "tag_Name_" + env.replace /-/g, "_"
-      cmd = "ansible-playbook UpdateEnvironment.yaml -l #{tag} -e \"env_name=#{env} version=#{art}\""
+      cmd = "ansible-playbook UpdateEnvironment.yaml -l #{tag} -e \"env_name=#{env} version=#{art} cloud_env=#{cloudEnv}\""
       r.send cmd
       exec cmd, {cwd: "/repos/tools/Ansible/Playbooks"}, (error, stdout, stderr) ->
         r.reply error if error?
         r.reply stdout if error?
 
-    async.parallel [download("environments"), download("artifacts")], (error, result) ->
-      [environments, artifacts] = result
+    async.parallel [download("environments"), download("artifacts"), download("cloud-env")], (error, result) ->
+      [environments, artifacts, cloudEnv] = result
       env = validate(environments, r.match[2], "environment", true)
       art = validate(artifacts, r.match[3], "artifact", false) if env
-      update(env, art) if env && art
+      update(env, art, cloudEnv) if env && art
 
   robot.respond /env r(estore)? ([^ ]+)( keep)?$/i, (r) ->
     env = r.match[2]
