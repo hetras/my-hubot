@@ -99,7 +99,6 @@ module.exports = (robot) ->
       else
         body = body.replace(/(\\r\\n|\\n|\\r)/gm,"")
                    .replace(/\\"/gm, '"')
-        body = body.substring(1, body.length - 1)
         data = JSON.parse body
 
         if r.match[3]?
