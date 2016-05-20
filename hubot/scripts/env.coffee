@@ -67,7 +67,7 @@ module.exports = (robot) ->
 
     update = (env, art) ->
       tag = "tag_Name_" + env.replace /-/g, "_"
-      cmd = "ansible-playbook UpdateEnvironment.yaml -l #{tag} -e \"env_name=#{env} version=#{art}\""
+      cmd = "ansible-playbook UpdateEnvironment.yaml -l #{tag} -e \"env_name=#{env} version=#{art} cloud_env=#{process.env.AWS_PROFILE}\""
       r.send cmd
       exec cmd, {cwd: "/repos/tools/Ansible/Playbooks"}, (error, stdout, stderr) ->
         r.reply error if error?
